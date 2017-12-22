@@ -1,0 +1,24 @@
+table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 25%;
+	margin: 30px;
+}
+
+td, th {
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
+}
+
+.separator {
+	border-top: 2px solid black;
+}
+
+.table-success>th {
+	background-color: #c3e6cb;
+}
+
+.table-danger>th {
+	background-color: #f5c6cb;
+}

@@ -1,0 +1,47 @@
+{
+	"misc": {
+		"metal_piece": {
+			"need": 81
+		},
+		"serpents_force": {
+			"need": 17
+		}
+	},
+	"stones": {
+		"taurus": {
+			"need": 70
+		},
+		"cancer": {
+			"need": 65
+		},
+		"virgo": {
+			"need": 30
+		},
+		"scorpio": {
+			"need": 30
+		},
+		"hydra": {
+			"need": 70
+		}
+	},
+	"fragments": {
+		"taurus": {
+			"need": 12
+		},
+		"cancer": {
+			"need": 12
+		},
+		"virgo": {
+			"need": 12
+		},
+		"scorpio": {
+			"need": 24
+		},
+		"hydra": {
+			"need": 10
+		},
+		"ophiuchus": {
+			"need": 24
+		}
+	}
+}
