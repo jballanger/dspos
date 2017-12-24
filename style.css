@@ -19,6 +19,11 @@ td, th {
 	border-top: 2px solid black;
 }
 
+.responsive-table {
+	overflow-x: auto;
+	display: inline-block;
+}
+
 .table-primary>th {
 	background-color: rgba(184, 218, 255, 1);
 }
@@ -29,6 +34,14 @@ td, th {
 
 .table-danger>th {
 	background-color: rgba(245, 198, 203, 0.6);
+}
+
+.have-input {
+	background: none;
+	border: none;
+	font-size: 16px;
+	font-weight: bold;
+	width: 35px;
 }
 
 .modal-mask {

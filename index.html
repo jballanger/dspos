@@ -10,44 +10,46 @@
 </head>
 <body>
 	<div id="app">
-		<vue-simple-spinner size="large" v-if="loading"></vue-simple-spinner>
 		<div class="data-actions">
 			<button id="show-modal" @click="showModal = true">Export</button>
 			<button id="show-modal" @click="showModal = true">Import</button>
 		</div>
 		<modal v-if="showModal" @close="showModal = false" :data="data"></modal>
 		<pos-table :mats="data"></pos-table>
+		<vue-simple-spinner size="large" v-if="loading"></vue-simple-spinner>
 	</div>
 	<script type="text/x-template" id="pos-table-template">
-		<table v-if="mats">
-			<thead>
-				<th>#</th>
-				<th>Item</th>
-				<th>Need</th>
-				<th>Have</th>
-				<th>Left</th>
-			</thead>
-			<tbody>
-				<template v-for="(item, index) in mats">
-					<tr class="table-primary">
-						<th>{{ index | formatIndex }}</th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-					</tr>
-					<template v-for="(quantity, name) in item">
-						<tr :class="[ ((quantity.need - quantity.have) > 0) ? 'table-danger' : 'table-success' ]">
+		<div class="responsive-table">
+			<table v-if="mats">
+				<thead>
+					<th>#</th>
+					<th>Item</th>
+					<th>Need</th>
+					<th>Have</th>
+					<th>Left</th>
+				</thead>
+				<tbody>
+					<template v-for="(item, index) in mats">
+						<tr class="table-primary">
+							<th>{{ index | formatIndex }}</th>
 							<th></th>
-							<th>{{ name | formatName }}</th>
-							<th>{{ quantity.need }}</th>
-							<th>{{ quantity.have }}</th>
-							<th>{{ (quantity.need - quantity.have) | formatLeft }}</th>
+							<th></th>
+							<th></th>
+							<th></th>
 						</tr>
+						<template v-for="(quantity, name) in item">
+							<tr :class="[ ((quantity.need - quantity.have) > 0) ? 'table-danger' : 'table-success' ]">
+								<th></th>
+								<th>{{ name | formatName }}</th>
+								<th>{{ quantity.need }}</th>
+								<th><input v-model="quantity.have" class="have-input"/></th>
+								<th>{{ (quantity.need - quantity.have) | formatLeft }}</th>
+							</tr>
+						</template>
 					</template>
-				</template>
-			</tbody>
-		</table>
+				</tbody>
+			</table>
+		</div>
 	</script>
 	<script type="text/x-template" id="modal-template">
 		<transition name="modal">
@@ -78,7 +80,6 @@
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 	<script src="https://cdn.rawgit.com/dzwillia/vue-simple-spinner/v1.2.5/dist/vue-simple-spinner.min.js"></script>
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script src="script.js"></script>
 </body>
 </html>

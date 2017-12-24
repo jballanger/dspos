@@ -42,7 +42,16 @@ var vm = new Vue({
 			return obj;
 		},
 		fetchData: function() {
-			axios.all([
+			var self = this;
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					self.data = JSON.parse(xhttp.responseText);
+				}
+			};
+			xhttp.open('GET', 'data.json', true);
+			xhttp.send();
+			/*axios.all([
 				axios.get('data.json'),
 				axios.get('sample.json')
 			])
@@ -50,7 +59,7 @@ var vm = new Vue({
 				var data = this.merge(need.data, sample.data);
 				this.loading = false;
 				this.data = data;
-			}));
+			}));*/
 		}
 	}
 });
