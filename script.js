@@ -23,14 +23,42 @@ Vue.component('export', {
 	}
 });
 Vue.component('import', {
-	props: ['data'],
-	template: '#import-template'
+	props: ['value'],
+	template: '#import-template',
+	data: function() {
+		return {
+			error: null
+		}
+	},
+	methods: {
+		isJson: function(val) {
+			try {
+				val = JSON.parse(val);
+			} catch (e) {
+				return (false);
+			}
+			if (typeof val === 'object' && val !== null) {
+				return (true);
+			}
+			return (false);
+		},
+		importData: function() {
+			if (this.isJson(this.value)) {
+				this.error = '';
+				this.$emit('input', this.value);
+				this.$emit('close');
+			} else {
+				this.error = 'Invalid json';
+			}
+		}
+	}
 });
 var vm = new Vue({
 	el: '#app',
 	data: {
+		base: null,
 		data: null,
-		importedData: 'ok',
+		importedData: null,
 		showExport: false,
 		showImport: false
 	},
@@ -43,18 +71,20 @@ var vm = new Vue({
 				localStorage.setItem('dsPosData', JSON.stringify(val));
 			},
 			deep: true
+		},
+		importedData: async function(val) {
+			this.data = await this.merge(this.base, val);
 		}
 	},
 	methods: {
-		importData: function() {
-			console.log(this.importedData);
-		},
 		merge: async function(obj, obj2) {
 			if (typeof obj !== 'object') obj = await JSON.parse(obj);
 			if (typeof obj2 !== 'object') obj2 = await JSON.parse(obj2);
 			for (var key in obj2) {
 				for (var key2 in obj2[key]) {
-					obj[key][key2].have = obj2[key][key2].have;
+					if (obj2[key][key2].have) {
+						obj[key][key2].have = obj2[key][key2].have;
+					}
 				}
 			}
 			return obj;
@@ -65,6 +95,7 @@ var vm = new Vue({
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = async function() {
 				if (this.readyState == 4 && this.status == 200) {
+					self.base = xhttp.responseText;
 					if (userData) self.data = await self.merge(xhttp.responseText, userData);
 					else self.data = JSON.parse(xhttp.responseText);
 				}

@@ -1,8 +1,18 @@
+a {
+	color: #007bff;
+	text-decoration: none;
+	background-color: transparent;
+}
+
+img {
+	vertical-align: bottom;
+}
+
 table {
 	font-family: arial, sans-serif;
 	border-collapse: collapse;
 	width: auto;
-	margin: 30px;
+	margin: auto;
 }
 
 td, th {
@@ -12,7 +22,8 @@ td, th {
 }
 
 .actions {
-	float: right;
+	width: 100%;
+	text-align: right;
 }
 
 .separator {
@@ -21,7 +32,6 @@ td, th {
 
 .responsive-table {
 	overflow-x: auto;
-	display: inline-block;
 }
 
 .table-primary>th {
@@ -34,6 +44,10 @@ td, th {
 
 .table-danger>th {
 	background-color: rgba(245, 198, 203, 0.6);
+}
+
+.text-danger {
+	color: #dc3545;
 }
 
 .have-input {

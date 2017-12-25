@@ -11,12 +11,11 @@
 <body>
 	<div id="app">
 		<div class="actions">
-			{{ importedData }}
 			<button @click="showExport = true">Export</button>
 			<button @click="showImport = true">Import</button>
 		</div>
-		<export v-if="showExport" @close="showExport = false" :data="data"></export>
-		<import v-if="showImport" @close="showImport = false" @import="importData" :data="importedData"></import>
+		<export v-if="showExport" :data="data" @close="showExport = false"></export>
+		<import v-if="showImport" v-model="importedData" @close="showImport = false"></import>
 		<pos-table :mats="data"></pos-table>
 		<vue-simple-spinner size="large" v-if="!data"></vue-simple-spinner>
 	</div>
@@ -61,6 +60,9 @@
 						<div class="modal-header">
 							<slot name="header">
 								<h3>JSON data</h3>
+									<h5>
+										<a href="https://www.json.org/" target="_blank" rel="noopener noreferrer">What is JSON ?</a> <img src="confused.gif">
+									</h5>
 							</slot>
 						</div>
 						<div class="modal-body">
@@ -90,12 +92,13 @@
 						</div>
 						<div class="modal-body">
 							<slot name="body">
-								<textarea v-model="data" rows="5" cols="40"></textarea>
+								<h5 class="text-danger">{{ error }}</h5>
+								<textarea v-model="value" rows="5" cols="40"></textarea>
 							</slot>
 						</div>
 						<div class="modal-footer">
 							<slot name="footer">
-								<button class="modal-default-button" @click="$emit('import')">Import</button>
+								<button class="modal-default-button" @click="importData">Import</button>
 								<button class="modal-default-button" @click="$emit('close')">Close</button>
 							</slot>
 						</div>
