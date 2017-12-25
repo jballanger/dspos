@@ -10,13 +10,15 @@
 </head>
 <body>
 	<div id="app">
-		<div class="data-actions">
-			<button id="show-modal" @click="showModal = true">Export</button>
-			<button id="show-modal" @click="showModal = true">Import</button>
+		<div class="actions">
+			{{ importedData }}
+			<button @click="showExport = true">Export</button>
+			<button @click="showImport = true">Import</button>
 		</div>
-		<modal v-if="showModal" @close="showModal = false" :data="data"></modal>
+		<export v-if="showExport" @close="showExport = false" :data="data"></export>
+		<import v-if="showImport" @close="showImport = false" @import="importData" :data="importedData"></import>
 		<pos-table :mats="data"></pos-table>
-		<vue-simple-spinner size="large" v-if="loading"></vue-simple-spinner>
+		<vue-simple-spinner size="large" v-if="!data"></vue-simple-spinner>
 	</div>
 	<script type="text/x-template" id="pos-table-template">
 		<div class="responsive-table">
@@ -51,7 +53,7 @@
 			</table>
 		</div>
 	</script>
-	<script type="text/x-template" id="modal-template">
+	<script type="text/x-template" id="export-template">
 		<transition name="modal">
 			<div class="modal-mask">
 				<div class="modal-wrapper" @click="$emit('close')">
@@ -63,14 +65,38 @@
 						</div>
 						<div class="modal-body">
 							<slot name="body">
-								<textarea v-model="jsonData" id="jsonTextarea" rows="5" cols="45"></textarea>
+								<textarea v-model="jsonData" rows="5" cols="40" @click="$event.target.select()"></textarea>
 							</slot>
 						</div>
 						<div class="modal-footer">
 							<slot name="footer">
-								<button class="modal-default-button" @click="$emit('close')">
-									Close
-								</button>
+								<button class="modal-default-button" @click="$emit('close')">Close</button>
+							</slot>
+						</div>
+					</div>
+				</div>
+			</div>
+		</transition>
+	</script>
+	<script type="text/x-template" id="import-template">
+		<transition name="modal">
+			<div class="modal-mask">
+				<div class="modal-wrapper" @click="$emit('close')">
+					<div class="modal-container" @click.stop>
+						<div class="modal-header">
+							<slot name="header">
+								<h3>JSON data</h3>
+							</slot>
+						</div>
+						<div class="modal-body">
+							<slot name="body">
+								<textarea v-model="data" rows="5" cols="40"></textarea>
+							</slot>
+						</div>
+						<div class="modal-footer">
+							<slot name="footer">
+								<button class="modal-default-button" @click="$emit('import')">Import</button>
+								<button class="modal-default-button" @click="$emit('close')">Close</button>
 							</slot>
 						</div>
 					</div>

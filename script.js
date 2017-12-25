@@ -13,27 +13,45 @@ Vue.component('pos-table', {
 		}
 	}
 });
-Vue.component('modal', {
+Vue.component('export', {
 	props: ['data'],
-	template: '#modal-template',
+	template: '#export-template',
 	computed: {
 		jsonData: function() {
 			return (JSON.stringify(this.data));
 		}
 	}
 });
+Vue.component('import', {
+	props: ['data'],
+	template: '#import-template'
+});
 var vm = new Vue({
 	el: '#app',
 	data: {
-		loading: true,
 		data: null,
-		showModal: false
+		importedData: 'ok',
+		showExport: false,
+		showImport: false
 	},
 	created: function() {
 		this.fetchData();
 	},
+	watch: {
+		data: {
+			handler: function(val) {
+				localStorage.setItem('dsPosData', JSON.stringify(val));
+			},
+			deep: true
+		}
+	},
 	methods: {
-		merge: function(obj, obj2) {
+		importData: function() {
+			console.log(this.importedData);
+		},
+		merge: async function(obj, obj2) {
+			if (typeof obj !== 'object') obj = await JSON.parse(obj);
+			if (typeof obj2 !== 'object') obj2 = await JSON.parse(obj2);
 			for (var key in obj2) {
 				for (var key2 in obj2[key]) {
 					obj[key][key2].have = obj2[key][key2].have;
@@ -42,24 +60,17 @@ var vm = new Vue({
 			return obj;
 		},
 		fetchData: function() {
+			var userData = localStorage.getItem('dsPosData');
 			var self = this;
 			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
+			xhttp.onreadystatechange = async function() {
 				if (this.readyState == 4 && this.status == 200) {
-					self.data = JSON.parse(xhttp.responseText);
+					if (userData) self.data = await self.merge(xhttp.responseText, userData);
+					else self.data = JSON.parse(xhttp.responseText);
 				}
 			};
 			xhttp.open('GET', 'data.json', true);
 			xhttp.send();
-			/*axios.all([
-				axios.get('data.json'),
-				axios.get('sample.json')
-			])
-			.then(axios.spread((need, sample) => {
-				var data = this.merge(need.data, sample.data);
-				this.loading = false;
-				this.data = data;
-			}));*/
 		}
 	}
 });

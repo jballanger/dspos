@@ -1,47 +1,60 @@
 {
-	"misc": {
+	"misc.": {
 		"metal_piece": {
-			"need": 81
+			"need": 81,
+			"have": 0
 		},
 		"serpents_force": {
-			"need": 17
+			"need": 17,
+			"have": 0
 		}
 	},
 	"stones": {
 		"taurus": {
-			"need": 70
+			"need": 70,
+			"have": 0
 		},
 		"cancer": {
-			"need": 65
+			"need": 65,
+			"have": 0
 		},
 		"virgo": {
-			"need": 30
+			"need": 30,
+			"have": 0
 		},
 		"scorpio": {
-			"need": 30
+			"need": 30,
+			"have": 0
 		},
 		"hydra": {
-			"need": 70
+			"need": 70,
+			"have": 0
 		}
 	},
 	"fragments": {
 		"taurus": {
-			"need": 12
+			"need": 12,
+			"have": 0
 		},
 		"cancer": {
-			"need": 12
+			"need": 12,
+			"have": 0
 		},
 		"virgo": {
-			"need": 12
+			"need": 12,
+			"have": 0
 		},
 		"scorpio": {
-			"need": 24
+			"need": 24,
+			"have": 0
 		},
 		"hydra": {
-			"need": 10
+			"need": 10,
+			"have": 0
 		},
 		"ophiuchus": {
-			"need": 24
+			"need": 24,
+			"have": 0
 		}
 	}
 }
