@@ -29,6 +29,23 @@ td, th {
 	padding: 8px;
 }
 
+@keyframes loader {
+	0% {transform: rotate(0deg);}
+	100% {transform: rotate(1turn);}
+}
+
+.loader {
+	margin: 0px auto;
+	border-radius: 100%;
+	border-width: 3px;
+	border-style: solid;
+	border-color: rgb(33, 150, 243) rgb(238, 238, 238) rgb(238, 238, 238);
+	border-image: initial;
+	width: 64px;
+	height: 64px;
+	animation: loader 0.8s linear infinite;
+}
+
 .actions {
 	width: 100%;
 	text-align: right;
