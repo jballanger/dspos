@@ -1,3 +1,24 @@
+Vue.component('table-filters', {
+	template: '#table-filters-template',
+	data: function() {
+		return {
+			parts: ['weapon', 'head', 'top', 'bottom', 'gloves', 'shoes', 'shoulder', 'wings']
+		}
+	},
+	filters: {
+		formatLabel: function(val) {
+			return (`${val.charAt(0).toUpperCase()}${val.slice(1)}`);
+		},
+		formatId: function(val) {
+			return (`${val}_check`);
+		}
+	},
+	methods: {
+		filter: function(val) {
+			this.$emit('filter', ['want', val]);
+		}
+	}
+});
 Vue.component('pos-table', {
 	props: ['mats'],
 	template: '#pos-table-template',
@@ -60,7 +81,12 @@ var vm = new Vue({
 		data: null,
 		importedData: null,
 		showExport: false,
-		showImport: false
+		showImport: false,
+		showFilters: false,
+		filters: {
+			want: [],
+			have: []
+		}
 	},
 	created: function() {
 		this.fetchData();
@@ -77,6 +103,42 @@ var vm = new Vue({
 		}
 	},
 	methods: {
+		filter: function(val) {
+			var part = val[1];
+			if (val[0] === 'want') {
+				let filtersIndex = this.filters.want.indexOf(part);
+				if (filtersIndex !== -1) this.filters.want.splice(filtersIndex, 1);
+				else this.filters.want.push(part);
+				Object.keys(this.base[part]).forEach(rarity => {
+					Object.keys(this.base[part][rarity]).forEach(mat => {
+						let index = mat.split('.');
+						if (filtersIndex !== -1) this.data[index[0]][index[1]].need += this.base[part][rarity][mat];
+						else this.data[index[0]][index[1]].need -= this.base[part][rarity][mat];
+					});
+				});
+			} else if (val [0] === 'have') {
+				console.log('have filter');
+			}
+		},
+		build: async function(obj) {
+			if (typeof obj !== 'object') obj = await JSON.parse(obj);
+			var build = {};
+			Object.keys(obj).forEach(part => {
+				Object.keys(obj[part]).forEach(rarity => {	
+					Object.keys(obj[part][rarity]).forEach(mat => {
+						let index = mat.split('.');
+						if (!build[index[0]]) build[index[0]] = {};
+						if (!build[index[0]][index[1]]) {
+							build[index[0]][index[1]] = {};
+							build[index[0]][index[1]].need = 0;
+							build[index[0]][index[1]].have = 0;
+						}
+						build[index[0]][index[1]].need += obj[part][rarity][mat];
+					});
+				});
+			});
+			return (build);
+		},
 		merge: async function(obj, obj2) {
 			if (typeof obj !== 'object') obj = await JSON.parse(obj);
 			if (typeof obj2 !== 'object') obj2 = await JSON.parse(obj2);
@@ -95,12 +157,15 @@ var vm = new Vue({
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = async function() {
 				if (this.readyState == 4 && this.status == 200) {
-					self.base = xhttp.responseText;
+					self.base = await JSON.parse(xhttp.responseText);
+					self.data = await self.build(xhttp.responseText);
+					//console.log(self.base);
+					/*self.base = xhttp.responseText;
 					if (userData) self.data = await self.merge(xhttp.responseText, userData);
-					else self.data = JSON.parse(xhttp.responseText);
+					else self.data = JSON.parse(xhttp.responseText);*/
 				}
 			};
-			xhttp.open('GET', 'data.json', true);
+			xhttp.open('GET', 'data2.json', true);
 			xhttp.send();
 		}
 	}

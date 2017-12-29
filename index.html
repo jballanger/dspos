@@ -12,14 +12,61 @@
 <body>
 	<div id="app">
 		<div class="actions">
+			<button @click="showFilters = true">Filters</button>
 			<button @click="showExport = true">Export</button>
 			<button @click="showImport = true">Import</button>
 		</div>
 		<export v-if="showExport" :data="data" @close="showExport = false"></export>
 		<import v-if="showImport" v-model="importedData" @close="showImport = false"></import>
+		<table-filters v-if="showFilters" @close="showFilters = false" @filter="filter"></table-filters>
 		<pos-table :mats="data"></pos-table>
 		<div class="loader" v-if="!data"></div>
 	</div>
+	<script type="text/x-template" id="table-filters-template">
+		<transition name="modal">
+			<div class="modal-mask">
+				<div class="modal-wrapper" @click="$emit('close')">
+					<div class="modal-container" @click.stop>
+						<div class="modal-header">
+							<slot name="header">
+								<h3>Filters</h3>
+							</slot>
+						</div>
+						<div class="modal-body">
+							<slot name="body">
+								<div class="parts">
+									<h3>I want:</h3>
+									<template v-for="part in parts">
+										<div class="part">
+											<input type="checkbox" :id="part | formatId" @click="filter(part)" checked/>
+											<label :for="part | formatId">{{ part | formatLabel }}</label>
+										</div>
+									</template>
+									<h3>I have:</h3>
+									<template v-for="part in parts">
+										<div class="part" style="padding: 5px 0px">
+											<select>
+												<option selected>No</option>
+												<option v-if="part !== 'wings'">Normal</option>
+												<option>Rare</option>
+												<option>Hero</option>
+											</select>
+											<label :for="part | formatId">{{ part | formatLabel }}</label>
+										</div>
+									</template>
+								</div>
+							</slot>
+						</div>
+						<div class="modal-footer">
+							<slot name="footer">
+								<button class="modal-default-button" @click="$emit('close')">Close</button>
+							</slot>
+						</div>
+					</div>
+				</div>
+			</div>
+		</transition>
+	</script>
 	<script type="text/x-template" id="pos-table-template">
 		<div class="responsive-table">
 			<table v-if="mats">

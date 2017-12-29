@@ -1,3 +1,7 @@
+body {
+	font-family: arial, sans-serif;
+}
+
 a {
 	color: #007bff;
 	text-decoration: none;
@@ -50,6 +54,15 @@ td, th {
 	width: 100%;
 	text-align: right;
 	padding-bottom: 10px;
+}
+
+.parts {
+	text-align: center;
+	padding-bottom: 15px;
+}
+
+.part {
+	text-align: left;
 }
 
 .separator {

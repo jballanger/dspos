@@ -1,60 +1,83 @@
 {
-	"misc.": {
-		"metal_piece": {
-			"need": 81,
-			"have": 0
+	"table": {
+		"misc": {
+			"metal_piece": {
+				"need": 81,
+				"have": 0
+			},
+			"serpents_force": {
+				"need": 17,
+				"have": 0
+			}
 		},
-		"serpents_force": {
-			"need": 17,
-			"have": 0
+		"stones": {
+			"taurus": {
+				"need": 70,
+				"have": 0
+			},
+			"cancer": {
+				"need": 65,
+				"have": 0
+			},
+			"virgo": {
+				"need": 30,
+				"have": 0
+			},
+			"scorpio": {
+				"need": 30,
+				"have": 0
+			},
+			"hydra": {
+				"need": 70,
+				"have": 0
+			}
+		},
+		"fragments": {
+			"taurus": {
+				"need": 12,
+				"have": 0
+			},
+			"cancer": {
+				"need": 12,
+				"have": 0
+			},
+			"virgo": {
+				"need": 12,
+				"have": 0
+			},
+			"scorpio": {
+				"need": 24,
+				"have": 0
+			},
+			"hydra": {
+				"need": 10,
+				"have": 0
+			},
+			"ophiuchus": {
+				"need": 24,
+				"have": 0
+			}
 		}
 	},
-	"stones": {
-		"taurus": {
-			"need": 70,
-			"have": 0
+	"parts": {
+		"weapon": {
+			"0": {
+				"metal_piece": 3,
+				"stones.hydra": 5,
+				"fragments.cancer": 2
+			},
+			"1": {
+				"metal_piece": 4,
+				"stones.hydra": 15,
+				"fragments.cancer": 4
+			},
+			"2": {
+				"metal_piece": 6,
+				"stones.hydra": 20,
+				"fragments.cancer": 6,
+				"misc.serpents_force": 3
+			}
 		},
-		"cancer": {
-			"need": 65,
-			"have": 0
-		},
-		"virgo": {
-			"need": 30,
-			"have": 0
-		},
-		"scorpio": {
-			"need": 30,
-			"have": 0
-		},
-		"hydra": {
-			"need": 70,
-			"have": 0
-		}
-	},
-	"fragments": {
-		"taurus": {
-			"need": 12,
-			"have": 0
-		},
-		"cancer": {
-			"need": 12,
-			"have": 0
-		},
-		"virgo": {
-			"need": 12,
-			"have": 0
-		},
-		"scorpio": {
-			"need": 24,
-			"have": 0
-		},
-		"hydra": {
-			"need": 10,
-			"have": 0
-		},
-		"ophiuchus": {
-			"need": 24,
-			"have": 0
-		}
+		""
 	}
 }
