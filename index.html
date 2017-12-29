@@ -18,7 +18,7 @@
 		</div>
 		<export v-if="showExport" :data="data" @close="showExport = false"></export>
 		<import v-if="showImport" v-model="importedData" @close="showImport = false"></import>
-		<table-filters v-if="showFilters" @close="showFilters = false" @filter="filter"></table-filters>
+		<table-filters v-if="showFilters" :filters="filters" @close="showFilters = false" @filter="filter"></table-filters>
 		<pos-table :mats="data"></pos-table>
 		<div class="loader" v-if="!data"></div>
 	</div>
@@ -38,18 +38,18 @@
 									<h3>I want:</h3>
 									<template v-for="part in parts">
 										<div class="part">
-											<input type="checkbox" :id="part | formatId" @click="filter(part)" checked/>
+											<input type="checkbox" :id="part | formatId" :checked="!filters.want[part]" @click="filter(part)"/>
 											<label :for="part | formatId">{{ part | formatLabel }}</label>
 										</div>
 									</template>
 									<h3>I have:</h3>
 									<template v-for="part in parts">
 										<div class="part" style="padding: 5px 0px">
-											<select>
-												<option selected>No</option>
-												<option v-if="part !== 'wings'">Normal</option>
-												<option>Rare</option>
-												<option>Hero</option>
+											<select v-model="filters.have[part]">
+												<option :value="undefined">No</option>
+												<option value="0" v-if="part !== 'wings'">Normal</option>
+												<option value="1">Rare</option>
+												<option value="2">Hero</option>
 											</select>
 											<label :for="part | formatId">{{ part | formatLabel }}</label>
 										</div>

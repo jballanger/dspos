@@ -1,4 +1,5 @@
 Vue.component('table-filters', {
+	props: ['filters'],
 	template: '#table-filters-template',
 	data: function() {
 		return {
@@ -106,13 +107,13 @@ var vm = new Vue({
 		filter: function(val) {
 			var part = val[1];
 			if (val[0] === 'want') {
-				let filtersIndex = this.filters.want.indexOf(part);
-				if (filtersIndex !== -1) this.filters.want.splice(filtersIndex, 1);
-				else this.filters.want.push(part);
+				let filterValue = this.filters.want[part];
+				if (filterValue) delete this.filters.want[part];
+				else this.filters.want[part] = true;
 				Object.keys(this.base[part]).forEach(rarity => {
 					Object.keys(this.base[part][rarity]).forEach(mat => {
 						let index = mat.split('.');
-						if (filtersIndex !== -1) this.data[index[0]][index[1]].need += this.base[part][rarity][mat];
+						if (filterValue) this.data[index[0]][index[1]].need += this.base[part][rarity][mat];
 						else this.data[index[0]][index[1]].need -= this.base[part][rarity][mat];
 					});
 				});
