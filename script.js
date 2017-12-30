@@ -144,7 +144,8 @@ var vm = new Vue({
 			for (var key in obj2) {
 				for (var key2 in obj2[key]) {
 					if (obj2[key][key2].have) {
-						obj[key][key2].have = obj2[key][key2].have;
+						if (key === 'misc.') obj['misc'][key2].have = obj2[key][key2].have;
+						else obj[key][key2].have = obj2[key][key2].have;
 					}
 				}
 			}
