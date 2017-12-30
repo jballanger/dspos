@@ -13,11 +13,6 @@ Vue.component('table-filters', {
 		formatId: function(val) {
 			return (`${val}_check`);
 		}
-	},
-	methods: {
-		filter: function(val) {
-			this.$emit('filter', ['want', val]);
-		}
 	}
 });
 Vue.component('pos-table', {
@@ -85,12 +80,17 @@ var vm = new Vue({
 		showImport: false,
 		showFilters: false,
 		filters: {
-			want: [],
-			have: []
+			want: {'weapon': true, 'head': true, 'top': true, 'bottom': true, 'gloves': true, 'shoes': true, 'shoulder': true, 'wings': true},
+			have: {}
 		}
 	},
 	created: function() {
 		this.fetchData();
+	},
+	computed: {
+		exportData: function() {
+			return ({'data': this.data, 'filters': this.filters});
+		}
 	},
 	watch: {
 		data: {
@@ -99,28 +99,24 @@ var vm = new Vue({
 			},
 			deep: true
 		},
+		filters: {
+			handler: async function(val) {
+				localStorage.setItem('dsPosFilters', JSON.stringify(val));
+				this.data = await this.build(this.base);
+			},
+			deep: true
+		},
 		importedData: async function(val) {
-			this.data = await this.merge(this.base, val);
+			let tmp = JSON.parse(val);
+			if (tmp.filters && tmp.data) {
+				this.filters = tmp.filters;
+				this.data = await this.merge(this.data, tmp.data);
+			} else {
+				await this.merge(this.data, tmp);
+			}
 		}
 	},
 	methods: {
-		filter: function(val) {
-			var part = val[1];
-			if (val[0] === 'want') {
-				let filterValue = this.filters.want[part];
-				if (filterValue) delete this.filters.want[part];
-				else this.filters.want[part] = true;
-				Object.keys(this.base[part]).forEach(rarity => {
-					Object.keys(this.base[part][rarity]).forEach(mat => {
-						let index = mat.split('.');
-						if (filterValue) this.data[index[0]][index[1]].need += this.base[part][rarity][mat];
-						else this.data[index[0]][index[1]].need -= this.base[part][rarity][mat];
-					});
-				});
-			} else if (val [0] === 'have') {
-				console.log('have filter');
-			}
-		},
 		build: async function(obj) {
 			if (typeof obj !== 'object') obj = await JSON.parse(obj);
 			var build = {};
@@ -132,9 +128,11 @@ var vm = new Vue({
 						if (!build[index[0]][index[1]]) {
 							build[index[0]][index[1]] = {};
 							build[index[0]][index[1]].need = 0;
-							build[index[0]][index[1]].have = 0;
+							build[index[0]][index[1]].have = (this.data) ? (this.data[index[0]][index[1]].have) : 0;
 						}
-						build[index[0]][index[1]].need += obj[part][rarity][mat];
+						if (this.filters.want[part] && (!this.filters.have[part] || this.filters.have[part] < rarity)) {
+							build[index[0]][index[1]].need += obj[part][rarity][mat];
+						}
 					});
 				});
 			});
@@ -153,20 +151,22 @@ var vm = new Vue({
 			return obj;
 		},
 		fetchData: function() {
-			var userData = localStorage.getItem('dsPosData');
 			var self = this;
+			var user = {
+				'data': localStorage.getItem('dsPosData'),
+				'filters': localStorage.getItem('dsPosFilters')
+			};
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = async function() {
 				if (this.readyState == 4 && this.status == 200) {
 					self.base = await JSON.parse(xhttp.responseText);
-					self.data = await self.build(xhttp.responseText);
-					//console.log(self.base);
-					/*self.base = xhttp.responseText;
-					if (userData) self.data = await self.merge(xhttp.responseText, userData);
-					else self.data = JSON.parse(xhttp.responseText);*/
+					if (user.filters) self.filters = await JSON.parse(user.filters);
+					let tmpData = await self.build(xhttp.responseText);
+					if (user.data) self.data = await self.merge(tmpData, user.data);
+					else self.data = tmpData;
 				}
 			};
-			xhttp.open('GET', 'data2.json', true);
+			xhttp.open('GET', 'data.json', true);
 			xhttp.send();
 		}
 	}
